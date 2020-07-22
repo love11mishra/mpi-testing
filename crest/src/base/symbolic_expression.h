@@ -50,7 +50,7 @@ class SymbolicExpr {
   void AppendVars(set<var_t>* vars) const;
   bool DependsOn(const map<var_t,type_t>& vars) const;
 
-  void AppendToString(string* s) const;
+  void AppendToString(string* s, int tp='i') const;
 
   void Serialize(string* s) const;
   bool Parse(istream& s);
@@ -68,7 +68,7 @@ class SymbolicExpr {
   const map<var_t,value_t>& terms() const { return coeff_; }
   typedef map<var_t,value_t>::const_iterator TermIt;
 
- private:
+ //private:
   value_t const_;
   map<var_t,value_t> coeff_;
 };

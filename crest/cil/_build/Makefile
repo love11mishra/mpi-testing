@@ -90,7 +90,7 @@ $(BINDIR)/$(CILLY)$(EXE): $(OBJDIR)/src/main$(EXEMODE)
 	cp $< $@
 
 # cilly perl wrapper
-prefix = /usr/local
+prefix = /home/subhajit/student_submissions/lavlesh/crest_install
 
 FORCE_PERL_PREFIX = 
 ifeq ($(FORCE_PERL_PREFIX), 1)

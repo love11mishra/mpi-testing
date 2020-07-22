@@ -9,7 +9,6 @@
 // for details.
 
 #include <assert.h>
-#include <limits>
 #include <queue>
 #include <set>
 #include <stdio.h>
@@ -20,29 +19,12 @@
 #include "base/yices_solver.h"
 
 using std::make_pair;
-using std::numeric_limits;
 using std::queue;
 using std::set;
 
 namespace crest {
 
 typedef vector<const SymbolicPred*>::const_iterator PredIt;
-
-
-yices_expr makeYicesNum(yices_context ctx, value_t val) {
-  if ((val >= numeric_limits<int>::min()) && (val <= numeric_limits<int>::max())) {
-    return yices_mk_num(ctx, static_cast<int>(val));
-  } else {
-    // Send the constant term to Yices as a string, to correctly handle constant terms outside
-    // the range of integers.
-    //
-    // NOTE: This is not correct for unsigned long long values that are larger than the max
-    // long long int value.
-    char buff[32];
-    snprintf(buff, 32, "%lld", val);
-    return yices_mk_num_from_string(ctx, buff);
-  }
-}
 
 
 bool YicesSolver::IncrementalSolve(const vector<value_t>& old_soln,
@@ -164,12 +146,18 @@ bool YicesSolver::Solve(const map<var_t,type_t>& vars,
     for (PredIt i = constraints.begin(); i != constraints.end(); ++i) {
       const SymbolicExpr& se = (*i)->expr();
       terms.clear();
-      terms.push_back(makeYicesNum(ctx, se.const_term()));
+      terms.push_back(yices_mk_num(ctx, se.const_term()));
       for (SymbolicExpr::TermIt j = se.terms().begin(); j != se.terms().end(); ++j) {
-	yices_expr prod[2] = { x_expr[j->first], makeYicesNum(ctx, j->second) };
+	yices_expr prod[2] = { x_expr[j->first], yices_mk_num(ctx, j->second) };
 	terms.push_back(yices_mk_mul(ctx, prod, 2));
       }
       yices_expr e = yices_mk_sum(ctx, &terms.front(), terms.size());
+
+			printf("\nExpr: ");
+			yices_pp_expr(e);
+			printf("\nContext: ");
+			yices_dump_context(ctx);
+			printf("\n");
 
       yices_expr pred;
       switch((*i)->op()) {
@@ -187,6 +175,7 @@ bool YicesSolver::Solve(const map<var_t,type_t>& vars,
     }
   }
 
+	printf("\nModel: ");
   bool success = (yices_check(ctx) == l_true);
   if (success) {
     soln->clear();
@@ -195,8 +184,12 @@ bool YicesSolver::Solve(const map<var_t,type_t>& vars,
       long val;
       assert(yices_get_int_value(model, x_decl[i->first], &val));
       soln->insert(make_pair(i->first, val));
+			printf("%x (%x) = %d\n", i->first, i->second, val);
     }
   }
+	else {
+		printf("UNSAT\n");
+	}
 
   yices_del_context(ctx);
   return success;
@@ -204,3 +197,4 @@ bool YicesSolver::Solve(const map<var_t,type_t>& vars,
 
 
 }  // namespace crest
+

@@ -9,6 +9,7 @@
 // for details.
 
 #include <utility>
+#include <stdio.h>
 
 #include "base/symbolic_execution.h"
 

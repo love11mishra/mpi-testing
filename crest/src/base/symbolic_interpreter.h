@@ -37,26 +37,46 @@ class SymbolicInterpreter {
   void ClearStack(id_t id);
   void Load(id_t id, addr_t addr, value_t value);
   void Store(id_t id, addr_t addr);
+ 
+  // Number of symbolic inputs so far.
+  unsigned int num_inputs_;
+  unsigned int total_inputs_;
 
   void ApplyUnaryOp(id_t id, unary_op_t op, value_t value);
   void ApplyBinaryOp(id_t id, binary_op_t op, value_t value);
   void ApplyCompareOp(id_t id, compare_op_t op, value_t value);
-
+  void PrintInput(char *name,int val);
+  int GetTimeStamp();
   void Call(id_t id, function_id_t fid);
   void Return(id_t id);
   void HandleReturn(id_t id, value_t value);
 
   void Branch(id_t id, branch_id_t bid, bool pred_value);
 
+  value_t NewInputValue(type_t type, addr_t addr, value_t v);
   value_t NewInput(type_t type, addr_t addr);
+  value_t NewInputTemp(type_t type, addr_t addr,value_t val);
 
   // Accessor for symbolic execution so far.
   const SymbolicExecution& execution() const { return ex_; }
+  
+  
 
   // Debugging.
   void DumpMemory();
   void DumpPath();
+  
+  void CreateVarMap(addr_t addr, string* name, int tp, string *trigger);
+  void ApplyLogState(int x, int r_w, int line, char* varname, int val, int *addr);//aakanksha
+  void print(int x, int r_w, int line, char* varname, int val,int *addr);//aakanksha
+  void ApplyLogState_1(int x);
+  void ApplyLogState_gdb(int x);
 
+  void ApplyLogPC(int x);
+  void ApplyLogPC_gdb(int x);
+  void ApplyLogSpec(char *op,int *op1,int *op2);
+
+	int state_id;
  private:
   struct StackElem {
     SymbolicExpr* expr;  // NULL to indicate concrete.
@@ -75,16 +95,23 @@ class SymbolicInterpreter {
   // Memory map.
   map<addr_t,SymbolicExpr*> mem_;
 
+  // Variable name map.
+  map<addr_t,string*> names_;
+  map<addr_t,int> names_typs_;
+  map<addr_t,string*> names_trigger_;
+  
   // The symbolic execution (program path and inputs).
   SymbolicExecution ex_;
 
-  // Number of symbolic inputs so far.
-  unsigned int num_inputs_;
+
+
 
   // Helper functions.
   inline void PushConcrete(value_t value);
   inline void PushSymbolic(SymbolicExpr* expr, value_t value);
   inline void ClearPredicateRegister();
+	inline void ClearAllMaps();
+	inline void FreeMap(map<addr_t,string*> z);
 };
 
 }  // namespace crest

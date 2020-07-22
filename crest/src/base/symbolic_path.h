@@ -18,6 +18,7 @@
 
 #include "base/basic_types.h"
 #include "base/symbolic_predicate.h"
+#include <stdio.h>
 
 using std::istream;
 using std::ostream;

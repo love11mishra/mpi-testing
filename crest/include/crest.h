@@ -12,8 +12,9 @@
 #ifndef LIBCREST_CREST_H__
 #define LIBCREST_CREST_H__
 
+
 /*
- * During instrumentation, the folowing function calls are inserted in the
+ * During instrumentation, the following function calls are inserted in the
  * C code under test.
  *
  * These calls (loosely) correspond to an execution of the program
@@ -183,6 +184,7 @@ EXTERN void __CrestBranch(__CREST_ID, __CREST_BRANCH_ID, __CREST_BOOL) __SKIP;
 EXTERN void __CrestCall(__CREST_ID, __CREST_FUNCTION_ID) __SKIP;
 EXTERN void __CrestReturn(__CREST_ID) __SKIP;
 EXTERN void __CrestHandleReturn(__CREST_ID, __CREST_VALUE) __SKIP;
+EXTERN void __CrestDump(__CREST_ID, __CREST_VALUE) __SKIP;
 
 /*
  * Functions (macros) for obtaining symbolic inputs.
@@ -193,6 +195,28 @@ EXTERN void __CrestHandleReturn(__CREST_ID, __CREST_VALUE) __SKIP;
 #define CREST_char(x) __CrestChar(&x)
 #define CREST_short(x) __CrestShort(&x)
 #define CREST_int(x) __CrestInt(&x)
+#define CREST_intA(x) __CrestInt(x)
+
+#define CREST_unsigned_char_trace(x, c, y) __CrestUCharTrace(&x, c, #y)
+#define CREST_unsigned_short_trace(x, c, y) __CrestUShortTrace(&x, c, #y)
+#define CREST_unsigned_int_trace(x, c, y) __CrestUIntTrace(&x, c, #y)
+#define CREST_char_trace(x, c, y) __CrestCharTrace(&x, c, #y)
+#define CREST_short_trace(x, c, y) __CrestShortTrace(&x, c, #y)
+#define CREST_int_trace(x, c, y) __CrestIntTrace(&x, c, #y)
+#define CREST_int_trace_1(x, c, y) __CrestIntTrace_1(&x, c, #y)
+
+#define CREST_var_map(x,t,q) __CrestVarMap(&x, #x, t, #q)
+#define CREST_var_map_1(x,y,t,q) __CrestVarMap_1(x, y, t, q)//aakanksha
+#define CREST_var_map_gdb(x,y,t,q) __CrestVarMap_gdb(x, y, t, q)//aakanksha
+#define CREST_log_state_1(x) __CrestLogState_1(x)
+#define CREST_log_state_gdb(x) __CrestLogState_gdb(x)
+#define CREST_log_state(x, r_w, line, name,val,addr) __CrestLogState(x, r_w, line, name, val,addr)//aakanksha
+#define CREST_print(x, r_w, line, name,val,addr) __CrestPrint(x, r_w, line, name, val,addr)//aakanksha
+#define CREST_get_time_stamp() __CrestGetTimeStamp()//aakanksha
+#define CREST_print_input(x,y) __CrestPrintInput(x,y)//aakanksha
+#define CREST_log_pc(x) __CrestLogPC(x)
+#define CREST_log_pc_on_gdbquery(x) __CrestLogPCOnGdbQuery(x)
+#define CREST_log_spec(op,op1,op2) __CrestLogSpec(op,op1,op2)
 
 EXTERN void __CrestUChar(unsigned char* x) __SKIP;
 EXTERN void __CrestUShort(unsigned short* x) __SKIP;
@@ -200,5 +224,27 @@ EXTERN void __CrestUInt(unsigned int* x) __SKIP;
 EXTERN void __CrestChar(char* x) __SKIP;
 EXTERN void __CrestShort(short* x) __SKIP;
 EXTERN void __CrestInt(int* x) __SKIP;
+
+EXTERN void __CrestUCharTrace(unsigned char* x, unsigned char c, char* iprange) __SKIP;
+EXTERN void __CrestUShortTrace(unsigned short* x, unsigned short c, char* iprange) __SKIP;
+EXTERN void __CrestUIntTrace(unsigned int* x, unsigned int c, char* iprange) __SKIP;
+EXTERN void __CrestCharTrace(char* x, char c, char* iprange) __SKIP;
+EXTERN void __CrestShortTrace(short* x, short c, char* iprange) __SKIP;
+EXTERN void __CrestIntTrace(int* x, int c, char* iprange) __SKIP;
+EXTERN void __CrestIntTrace_1(int* x, int c, char* iprange) __SKIP;
+
+EXTERN void __CrestVarMap(void* addr, char *name, int tp, char* trigger) __SKIP;
+EXTERN void __CrestVarMap_1(void* addr, char *name, int tp, char* trigger) __SKIP;
+EXTERN void __CrestVarMap_gdb(long unsigned int addr, char *name, int tp, char* trigger) __SKIP;
+EXTERN void __CrestLogState(unsigned int x, int r_w, int line, char *varname, int val,int *addr) __SKIP;//aakanksha
+EXTERN void __CrestPrint(unsigned int x, int r_w, int line, char *varname, int val, int *addr) __SKIP;//aakanksha
+EXTERN void __CrestLogState_1(unsigned int x) __SKIP;
+EXTERN void __CrestLogState_gdb(unsigned int x) __SKIP;
+EXTERN void __CrestLogPC(unsigned int x) __SKIP;
+EXTERN void __CrestLogPCOnGdbQuery(unsigned int x) __SKIP;
+
+EXTERN void __CrestLogSpec(char *op,int *op1,int *op2) __SKIP;
+EXTERN int __CrestGetTimeStamp() __SKIP;
+EXTERN void __CrestPrintInput(char *name,int val) __SKIP;
 
 #endif  /* LIBCREST_CREST_H__ */

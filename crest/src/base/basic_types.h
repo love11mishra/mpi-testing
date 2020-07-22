@@ -11,8 +11,6 @@
 #ifndef BASE_BASIC_TYPES_H__
 #define BASE_BASIC_TYPES_H__
 
-#include <cstddef>
-
 namespace crest {
 
 typedef int id_t;
@@ -33,7 +31,7 @@ static const branch_id_t kReturnId = -2;
 
 namespace ops {
 enum compare_op_t { EQ = 0, NEQ = 1, GT = 2, LE = 3, LT = 4, GE = 5 };
-enum binary_op_t { ADD, SUBTRACT, MULTIPLY, SHIFT_L, CONCRETE };
+enum binary_op_t { ADD, SUBTRACT, MULTIPLY, CONCRETE };
 enum unary_op_t { NEGATE, LOGICAL_NOT, BITWISE_NOT };
 }  // namespace ops
 
@@ -55,15 +53,11 @@ enum type_t { U_CHAR = 0,       CHAR = 1,
 }
 using types::type_t;
 
-value_t CastTo(value_t val, type_t type);
-
 extern const char* kMinValueStr[];
 extern const char* kMaxValueStr[];
 
 extern const value_t kMinValue[];
 extern const value_t kMaxValue[];
-
-extern const size_t kByteSize[];
 
 }  // namespace crest
 
