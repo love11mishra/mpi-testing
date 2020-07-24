@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+
+CREST_DIR=../crest
+CILLY=${CREST_DIR}/cil/bin/cilly
+MPI_CFLAGS=`mpicc --showme:compile`
+
+TARGET=`expr $1 : '\(.*\)\.c'`
+
+rm -f idcount stmtcount funcount cfg_func_map cfg branches cfg_branches
+
+${CILLY} $1 -c --save-temps --doCrestInstrument \
+    -I${CREST_DIR}/include -L${DIR}/lib ${MPI_CFLAGS}
+
+
+mpicc -c ${TARGET}.cil.c -o ${TARGET}.cil.o
+mpic++ -L${CREST_DIR}/lib/ ${TARGET}.cil.o -lcrest -lstdc++ -o ${TARGET}
+
+mpirun -n 4 ./${TARGET}
