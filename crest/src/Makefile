@@ -1,5 +1,6 @@
 
-YICES_DIR=/home/subhajit/student_submissions/lavlesh/yices-1.0.40
+PROJECT_ROOT=../../
+YICES_DIR=${PROJECT_ROOT}/yices
 
 CC=$(CXX)
 CFLAGS = -I. -I$(YICES_DIR)/include -Wall -fPIC -O2 -std=gnu++98 -no-pie
