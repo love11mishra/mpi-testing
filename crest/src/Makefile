@@ -3,7 +3,7 @@ PROJECT_ROOT=../../
 YICES_DIR=${PROJECT_ROOT}/yices
 
 CC=$(CXX)
-CFLAGS = -I. -I$(YICES_DIR)/include -Wall -fPIC -O2 -std=gnu++98 -no-pie
+CFLAGS = -I. -I$(YICES_DIR)/include -Wall -fPIC -O2 -std=gnu++98 -no-pie `mpicc --showme:compile`
 CXXFLAGS = $(CFLAGS)
 LDFLAGS = -L$(YICES_DIR)/lib
 LOADLIBES = -lyices

@@ -12,7 +12,6 @@
 #ifndef LIBCREST_CREST_H__
 #define LIBCREST_CREST_H__
 
-
 /*
  * During instrumentation, the following function calls are inserted in the
  * C code under test.
@@ -136,33 +135,33 @@
  */
 typedef enum {
   /* binary arithmetic */
-  __CREST_ADD       =  0,
-  __CREST_SUBTRACT  =  1,
-  __CREST_MULTIPLY  =  2,
-  __CREST_DIVIDE    =  3,
-  __CREST_MOD       =  4,
+  __CREST_ADD = 0,
+  __CREST_SUBTRACT = 1,
+  __CREST_MULTIPLY = 2,
+  __CREST_DIVIDE = 3,
+  __CREST_MOD = 4,
   /* binary bitwise operators */
-  __CREST_AND       =  5,
-  __CREST_OR        =  6,
-  __CREST_XOR       =  7,
-  __CREST_SHIFT_L   =  8,
-  __CREST_SHIFT_R   =  9,
+  __CREST_AND = 5,
+  __CREST_OR = 6,
+  __CREST_XOR = 7,
+  __CREST_SHIFT_L = 8,
+  __CREST_SHIFT_R = 9,
   /* binary logical operators */
-  __CREST_L_AND     = 10,
-  __CREST_L_OR      = 11,
+  __CREST_L_AND = 10,
+  __CREST_L_OR = 11,
   /* binary comparison */
-  __CREST_EQ        = 12,
-  __CREST_NEQ       = 13,
-  __CREST_GT        = 14,
-  __CREST_LEQ       = 15,
-  __CREST_LT        = 16,
-  __CREST_GEQ       = 17,
+  __CREST_EQ = 12,
+  __CREST_NEQ = 13,
+  __CREST_GT = 14,
+  __CREST_LEQ = 15,
+  __CREST_LT = 16,
+  __CREST_GEQ = 17,
   /* unhandled binary operators */
-  __CREST_CONCRETE  = 18,
+  __CREST_CONCRETE = 18,
   /* unary operators */
-  __CREST_NEGATE    = 19,
-  __CREST_NOT       = 20,
-  __CREST_L_NOT     = 21,
+  __CREST_NEGATE = 19,
+  __CREST_NOT = 20,
+  __CREST_L_NOT = 21,
 };
 
 /*
@@ -205,18 +204,18 @@ EXTERN void __CrestDump(__CREST_ID, __CREST_VALUE) __SKIP;
 #define CREST_int_trace(x, c, y) __CrestIntTrace(&x, c, #y)
 #define CREST_int_trace_1(x, c, y) __CrestIntTrace_1(&x, c, #y)
 
-#define CREST_var_map(x,t,q) __CrestVarMap(&x, #x, t, #q)
-#define CREST_var_map_1(x,y,t,q) __CrestVarMap_1(x, y, t, q)//aakanksha
-#define CREST_var_map_gdb(x,y,t,q) __CrestVarMap_gdb(x, y, t, q)//aakanksha
+#define CREST_var_map(x, t, q) __CrestVarMap(&x, #x, t, #q)
+#define CREST_var_map_1(x, y, t, q) __CrestVarMap_1(x, y, t, q)      // aakanksha
+#define CREST_var_map_gdb(x, y, t, q) __CrestVarMap_gdb(x, y, t, q)  // aakanksha
 #define CREST_log_state_1(x) __CrestLogState_1(x)
 #define CREST_log_state_gdb(x) __CrestLogState_gdb(x)
-#define CREST_log_state(x, r_w, line, name,val,addr) __CrestLogState(x, r_w, line, name, val,addr)//aakanksha
-#define CREST_print(x, r_w, line, name,val,addr) __CrestPrint(x, r_w, line, name, val,addr)//aakanksha
-#define CREST_get_time_stamp() __CrestGetTimeStamp()//aakanksha
-#define CREST_print_input(x,y) __CrestPrintInput(x,y)//aakanksha
+#define CREST_log_state(x, r_w, line, name, val, addr) __CrestLogState(x, r_w, line, name, val, addr)  // aakanksha
+#define CREST_print(x, r_w, line, name, val, addr) __CrestPrint(x, r_w, line, name, val, addr)         // aakanksha
+#define CREST_get_time_stamp() __CrestGetTimeStamp()                                                   // aakanksha
+#define CREST_print_input(x, y) __CrestPrintInput(x, y)                                                // aakanksha
 #define CREST_log_pc(x) __CrestLogPC(x)
 #define CREST_log_pc_on_gdbquery(x) __CrestLogPCOnGdbQuery(x)
-#define CREST_log_spec(op,op1,op2) __CrestLogSpec(op,op1,op2)
+#define CREST_log_spec(op, op1, op2) __CrestLogSpec(op, op1, op2)
 
 EXTERN void __CrestUChar(unsigned char* x) __SKIP;
 EXTERN void __CrestUShort(unsigned short* x) __SKIP;
@@ -233,18 +232,65 @@ EXTERN void __CrestShortTrace(short* x, short c, char* iprange) __SKIP;
 EXTERN void __CrestIntTrace(int* x, int c, char* iprange) __SKIP;
 EXTERN void __CrestIntTrace_1(int* x, int c, char* iprange) __SKIP;
 
-EXTERN void __CrestVarMap(void* addr, char *name, int tp, char* trigger) __SKIP;
-EXTERN void __CrestVarMap_1(void* addr, char *name, int tp, char* trigger) __SKIP;
-EXTERN void __CrestVarMap_gdb(long unsigned int addr, char *name, int tp, char* trigger) __SKIP;
-EXTERN void __CrestLogState(unsigned int x, int r_w, int line, char *varname, int val,int *addr) __SKIP;//aakanksha
-EXTERN void __CrestPrint(unsigned int x, int r_w, int line, char *varname, int val, int *addr) __SKIP;//aakanksha
+EXTERN void __CrestVarMap(void* addr, char* name, int tp, char* trigger) __SKIP;
+EXTERN void __CrestVarMap_1(void* addr, char* name, int tp, char* trigger) __SKIP;
+EXTERN void __CrestVarMap_gdb(long unsigned int addr, char* name, int tp, char* trigger) __SKIP;
+EXTERN void __CrestLogState(unsigned int x, int r_w, int line, char* varname, int val, int* addr) __SKIP;  // aakanksha
+EXTERN void __CrestPrint(unsigned int x, int r_w, int line, char* varname, int val, int* addr) __SKIP;     // aakanksha
 EXTERN void __CrestLogState_1(unsigned int x) __SKIP;
 EXTERN void __CrestLogState_gdb(unsigned int x) __SKIP;
 EXTERN void __CrestLogPC(unsigned int x) __SKIP;
 EXTERN void __CrestLogPCOnGdbQuery(unsigned int x) __SKIP;
 
-EXTERN void __CrestLogSpec(char *op,int *op1,int *op2) __SKIP;
+EXTERN void __CrestLogSpec(char* op, int* op1, int* op2) __SKIP;
 EXTERN int __CrestGetTimeStamp() __SKIP;
-EXTERN void __CrestPrintInput(char *name,int val) __SKIP;
+EXTERN void __CrestPrintInput(char* name, int val) __SKIP;
 
-#endif  /* LIBCREST_CREST_H__ */
+// macros to replace MPI wrapper calls with a user defined function in the tool
+
+#include <mpi/mpi.h>
+
+#define CR_MPI_Init(arg1, arg2) __CR_MPI_Init(arg1, arg2)
+#define CR_MPI_Finalize() __CR_MPI_Finalize()
+
+#define CR_MPI_Comm_size(comm, pNProcs) __CR_MPI_Comm_size(comm, pNProcs)
+#define CR_MPI_Comm_rank(comm, pRank) __CR_MPI_Comm_rank(comm, pRank)
+
+#define CR_MPI_Send(pBuf, count, datatype, dest, tag, comm) __CR_MPI_Send(pBuf, count, datatype, dest, tag, comm)
+#define CR_MPI_Recv(pBuf, count, datatype, source, tag, comm, pStatus) \
+  __CR_MPI_Recv(pBuf, count, datatype, source, tag, comm, pStatus)
+
+#define CR_MPI_Bcast(pBuffer, count, datatype, root, comm) __CR_MPI_Bcast(pBuffer, count, datatype, root, comm)
+#define CR_MPI_Reduce(pSendbuf, pRecvbuf, count, MPIDatatype, mpiOp, root, comm) \
+  __CR_MPI_Reduce(pSendbuf, pRecvbuf, count, MPIDatatype, mpiOp, root, comm)
+
+#define CR_MPI_Barrier(comm) __CR_MPI_Barrier(comm)
+
+#define CR_MPI_Scatter(pSendbuf, sendcount, sendtype, pRecvbuf, recvcount, recvtype, root, comm) \
+  __CR_MPI_Scatter(pSendbuf, sendcount, sendtype, pRecvbuf, recvcount, recvtype, root, comm)
+
+#define CR_MPI_Gather(sendbuf, sendcount, sendtype, pRecvbuf, recvcount, recvtype, root, comm) \
+  __CR_MPI_Gather(sendbuf, sendcount, sendtype, pRecvbuf, recvcount, recvtype, root, comm)
+
+EXTERN int __CR_MPI_Init(int* argc, char*** argv) __SKIP;
+EXTERN int __CR_MPI_Finalize(void) __SKIP;
+
+EXTERN int __CR_MPI_Comm_size(MPI_Comm comm, int* size) __SKIP;
+EXTERN int __CR_MPI_Comm_rank(MPI_Comm comm, int* rank) __SKIP;
+
+EXTERN int __CR_MPI_Send(const void* buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm) __SKIP;
+EXTERN int __CR_MPI_Recv(void* buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm,
+                         MPI_Status* status) __SKIP;
+
+EXTERN int __CR_MPI_Bcast(void* buffer, int count, MPI_Datatype datatype, int root, MPI_Comm comm) __SKIP;
+EXTERN int __CR_MPI_Reduce(const void* sendbuf, void* recvbuf, int count, MPI_Datatype datatype, MPI_Op op, int root,
+                           MPI_Comm comm) __SKIP;
+EXTERN int __CR_MPI_Barrier(MPI_Comm comm) __SKIP;
+
+EXTERN int __CR_MPI_Scatter(const void* sendbuf, int sendcount, MPI_Datatype sendtype, void* recvbuf, int recvcount,
+                            MPI_Datatype recvtype, int root, MPI_Comm comm) __SKIP;
+
+EXTERN int __CR_MPI_Gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype, void* recvbuf, int recvcount,
+                           MPI_Datatype recvtype, int root, MPI_Comm comm) __SKIP;
+
+#endif /* LIBCREST_CREST_H__ */
