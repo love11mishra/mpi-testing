@@ -247,4 +247,35 @@ EXTERN void __CrestLogSpec(char *op,int *op1,int *op2) __SKIP;
 EXTERN int __CrestGetTimeStamp() __SKIP;
 EXTERN void __CrestPrintInput(char *name,int val) __SKIP;
 
+
+
+// macros to replace MPI wrapper calls with a user defined function in the tool
+
+#include <mpi/mpi.h>
+
+#define CR_MPI_Init(arg1, arg2) __CR_MPI_Init(arg1, arg2)
+#define CR_MPI_Finalize() __CR_MPI_Finalize()
+
+#define CR_MPI_Comm_size(comm, pNProcs) __CR_MPI_Comm_size(comm, pNProcs)
+#define CR_MPI_Comm_rank(comm, pRank) __CR_MPI_Comm_rank(comm, pRank)
+
+#define CR_MPI_Send(pBuf, count, datatype, dest, tag, comm) __CR_MPI_Send(pBuf, count, datatype, dest, tag, comm)
+#define CR_MPI_Recv(pBuf, count, datatype, source, tag, comm, pStatus) __CR_MPI_Recv(pBuf, count, datatype, source, tag, comm, pStatus)
+
+#define CR_MPI_Bcast( pBuffer, count, datatype, root, comm) __CR_MPI_Bcast( pBuffer, count, datatype, root, comm)
+#define CR_MPI_Reduce(pSendbuf, pRecvbuf, count, MPIDatatype, mpiOp, root, comm) __CR_MPI_Reduce(pSendbuf, pRecvbuf, count, MPIDatatype, mpiOp, root, comm)
+#define CR_MPI_Barrier(comm) __CR_MPI_Barrier(comm)
+
+EXTERN int __CR_MPI_Init(int *argc, char ***argv) __SKIP;
+EXTERN int __CR_MPI_Finalize( void ) __SKIP;
+
+EXTERN int __CR_MPI_Comm_size(MPI_Comm comm, int *size) __SKIP;
+EXTERN int __CR_MPI_Comm_rank(MPI_Comm comm, int *rank) __SKIP;
+
+EXTERN int __CR_MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm) __SKIP;
+EXTERN int __CR_MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status) __SKIP;
+
+EXTERN int __CR_MPI_Bcast( void *buffer, int count, MPI_Datatype datatype, int root, MPI_Comm comm ) __SKIP;
+EXTERN int __CR_MPI_Reduce(const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm comm) __SKIP;
+EXTERN int __CR_MPI_Barrier( MPI_Comm comm ) __SKIP;
 #endif  /* LIBCREST_CREST_H__ */

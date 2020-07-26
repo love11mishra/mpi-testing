@@ -309,3 +309,31 @@ void __CrestLogSpec(char *op,int *op1,int *op2)
 {
     SI->ApplyLogSpec(op,op1,op2);
 }
+
+
+
+// MPI wrapper function definitions
+
+int __CR_MPI_Init(int *argc, char ***argv) {  MPI_Init(argc, argv); }
+int __CR_MPI_Finalize( void ) { MPI_Finalize(); }
+int __CR_MPI_Comm_size(MPI_Comm comm, int *size) { MPI_Comm_size(comm, size); }
+
+int __CR_MPI_Comm_rank(MPI_Comm comm, int *rank) { MPI_Comm_rank(comm, rank); }
+
+int __CR_MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm) {
+  MPI_Send(buf, count, datatype, dest, tag, comm);
+}
+
+int __CR_MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status) {
+  MPI_Recv(buf, count, datatype, source, tag, comm, status);
+}
+
+int __CR_MPI_Bcast( void *buffer, int count, MPI_Datatype datatype, int root, MPI_Comm comm) {
+  MPI_Bcast(buffer, count, datatype, root, comm);
+}
+
+int __CR_MPI_Reduce(const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm comm) {
+  MPI_Reduce(sendbuf, recvbuf, count, datatype, op, root, comm);
+}
+
+int __CR_MPI_Barrier( MPI_Comm comm ) { MPI_Barrier(comm); }
