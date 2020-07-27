@@ -17,4 +17,6 @@ ${CILLY} $1 -c --save-temps --doCrestInstrument \
 mpicc -c ${TARGET}.cil.c -o ${TARGET}.cil.o
 mpic++ -L${CREST_DIR}/lib/ ${TARGET}.cil.o -lcrest -lstdc++ -o ${TARGET}
 
-mpirun -n 4 ./${TARGET}
+echo "mpirun -n $2 ./${TARGET}"
+mpirun -n $2 ./${TARGET}
+
