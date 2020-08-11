@@ -59,6 +59,8 @@ extern const char* kMaxValueStr[];
 extern const value_t kMinValue[];
 extern const value_t kMaxValue[];
 
+enum mpi_call_t { MPI_INIT, MPI_RECV, MPI_SEND };
+
 }  // namespace crest
 
 #endif  // BASE_BASIC_TYPES_H__

@@ -277,14 +277,25 @@ int __CR_MPI_Comm_size(MPI_Comm comm, int* size) { MPI_Comm_size(comm, size); }
 int __CR_MPI_Comm_rank(MPI_Comm comm, int* rank) { MPI_Comm_rank(comm, rank); }
 
 int __CR_MPI_Send(const void* buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm) {
+  // log MPI_Send call
+
+  int rank = 0;
   MPI_Send(buf, count, datatype, dest, tag, comm);
+  MPI_Comm_rank(comm, &rank);
+  SI->ApplyMPICommLog(MPI_SEND, rank, dest);
 }
 
 int __CR_MPI_Recv(void* buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status* status) {
+
   MPI_Recv(buf, count, datatype, source, tag, comm, status);
+
+  int rank;
+  MPI_Comm_rank(comm, &rank);
+  SI->ApplyMPICommLog(MPI_RECV, source, rank);
 }
 
 int __CR_MPI_Bcast(void* buffer, int count, MPI_Datatype datatype, int root, MPI_Comm comm) {
+  SI->ApplyMPILog("MPI_Bcast");
   MPI_Bcast(buffer, count, datatype, root, comm);
 }
 

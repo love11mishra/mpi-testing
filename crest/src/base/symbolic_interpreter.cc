@@ -433,7 +433,7 @@ namespace crest {
     void SymbolicInterpreter::ApplyLogState(int x, int r_w, int line, char *varname=NULL, int val=0 ,int *a=NULL) {//aakanksha
         FILE *tr;
         tr = fopen("trace.txt","a");
-        
+
         FILE *observer;
         observer = fopen("observer.txt","a");
 
@@ -445,8 +445,8 @@ namespace crest {
         //}
 
         map<addr_t,string*>::const_iterator it;
-        
-        
+
+
         if (x == 100)
         {
 
@@ -495,7 +495,7 @@ namespace crest {
                 if (x == 100){observer,(tr, "%lu<%s>: %s [%d] {%s}\n", i->first, c, s.c_str(), *(char*)(i->first), trg->c_str());}
                 else{fprintf(tr, "%lu<%s>: %s [%d] {%s}\n", i->first, c, s.c_str(), *(char*)(i->first), trg->c_str());}
             else
-            { 
+            {
                 //fprintf(tr,"hi how are you 2.......... ....... ........... %lu \n",i->first);
                 if (x == 100){fprintf(observer, "%lu<%s>: %s [%d] {%s}\n", i->first, c, s.c_str(), *(int*)(i->first), trg->c_str());}
                 else{fprintf(tr, "%lu<%s>: %s [%d] {%s}\n", i->first, c, s.c_str(), *(int*)(i->first), trg->c_str());}
@@ -786,13 +786,13 @@ void SymbolicInterpreter::print(int tid, int r_w, int line, char* name, int val,
 
 }
 void SymbolicInterpreter::ApplyLogSpec(char *op,int *op1,int *op2) {
-    //string s; 
+    //string s;
     FILE *tr;
     tr = fopen("trace.txt","a");
     int x=1;
     fprintf(tr, "\nLocation(PC): %d, %d\n", x, state_id++);
     SymbolicExpr *val1, *val2;
-    ConstMemIt it, it2; 
+    ConstMemIt it, it2;
     string s;
     it = mem_.find((long unsigned int)op1);
     if (it == mem_.end())
@@ -810,7 +810,7 @@ void SymbolicInterpreter::ApplyLogSpec(char *op,int *op1,int *op2) {
         }
         else{
             val2 = it2->second;
-        }    
+        }
     }
     *val1 -= *val2 ;
     //int tp = names_typs_.find(op1)->second;
@@ -820,6 +820,36 @@ void SymbolicInterpreter::ApplyLogSpec(char *op,int *op1,int *op2) {
 
     fprintf(tr,"(%s %s %d)\n" , op, s.c_str(), 0);
     fprintf(tr, "%s\n", "END");
+    fclose(tr);
+}
+
+void SymbolicInterpreter::ApplyMPILog(char *msg) {
+
+    // currently only logging the MPI calls nothing else is being logged
+
+    FILE *tr;
+    tr = fopen("trace.txt", "a");
+    fprintf(tr, "\n** MPI LOG: %s **\n", msg);
+    fclose(tr);
+}
+
+void SymbolicInterpreter::ApplyMPICommLog(mpi_call_t cid, int src, int dest) {
+
+    FILE *tr;
+    tr = fopen("trace.txt", "a");
+    switch (cid) {
+        case MPI_RECV:
+        fprintf(tr, "MPI_RECV(src:%d -> dest:%d)\n", src, dest);
+        break;
+
+        case MPI_SEND:
+        fprintf(tr, "MPI_SEND(src:%d -> dest:%d)\n", src, dest);
+        break;
+
+        default:
+        fprintf(tr, "MPI_COMM_LOG : ERROR MODE\n");
+        break;
+    }
     fclose(tr);
 }
 
