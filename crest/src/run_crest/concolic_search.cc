@@ -194,15 +194,7 @@ void Search::LaunchProgram(const vector<value_t>& inputs) {
   */
 
   char command[512] = {0};
-
   sprintf(command, "mpirun -n %d %s", num_mpi_procs_, program_.c_str());
-
-  FILE* tr;
-  tr = fopen("run_program.txt", "w");
-  fprintf(tr, "RUN_PROGRAM DATA: num_mpi_procs=%d: program name : %s \n\n", num_mpi_procs_, program_.c_str());
-  fprintf(tr, "Final command to run : %s\n\n", command);
-  fclose(tr);
-
   system(program_.c_str());
 }
 
