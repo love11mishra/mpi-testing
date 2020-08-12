@@ -15,10 +15,11 @@
 #include "run_crest/concolic_search.h"
 
 int main(int argc, char* argv[]) {
-  if (argc < 4) {
+  if (argc < 5) {
     fprintf(stderr,
             "Syntax: run_crest <program> "
             "<number of iterations> "
+            "<number of mpi programs>"
             "-<strategy> [strategy options]\n");
     fprintf(stderr,
             "  Strategies include: "
@@ -28,7 +29,8 @@ int main(int argc, char* argv[]) {
 
   string prog = argv[1];
   int num_iters = atoi(argv[2]);
-  string search_type = argv[3];
+  int num_mpi_procs = atoi(argv[3]);
+  string search_type = argv[4];
 
   // Initialize the random number generator.
   struct timeval tv;
@@ -37,26 +39,26 @@ int main(int argc, char* argv[]) {
 
   crest::Search* strategy;
   if (search_type == "-random") {
-    strategy = new crest::RandomSearch(prog, num_iters);
+    strategy = new crest::RandomSearch(prog, num_iters, num_mpi_procs);
   } else if (search_type == "-random_input") {
-    strategy = new crest::RandomInputSearch(prog, num_iters);
+    strategy = new crest::RandomInputSearch(prog, num_iters, num_mpi_procs);
   } else if (search_type == "-dfs") {
-    if (argc == 4) {
-      strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, 1000000);
+    if (argc == 5) {
+      strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, num_mpi_procs, 1000000);
     } else {
-      strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, atoi(argv[4]));
+      strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, num_mpi_procs, atoi(argv[5]));
     }
   } else if (search_type == "-cfg") {
-    strategy = new crest::CfgHeuristicSearch(prog, num_iters);
+    strategy = new crest::CfgHeuristicSearch(prog, num_iters, num_mpi_procs);
   } else if (search_type == "-cfg_baseline") {
-    strategy = new crest::CfgBaselineSearch(prog, num_iters);
+    strategy = new crest::CfgBaselineSearch(prog, num_iters, num_mpi_procs);
   } else if (search_type == "-hybrid") {
-    strategy = new crest::HybridSearch(prog, num_iters, 100);
+    strategy = new crest::HybridSearch(prog, num_iters, num_mpi_procs, 100);
   } else if (search_type == "-uniform_random") {
-    if (argc == 4) {
-      strategy = new crest::UniformRandomSearch(prog, num_iters, 100000000);
+    if (argc == 5) {
+      strategy = new crest::UniformRandomSearch(prog, num_iters, num_mpi_procs, 100000000);
     } else {
-      strategy = new crest::UniformRandomSearch(prog, num_iters, atoi(argv[4]));
+      strategy = new crest::UniformRandomSearch(prog, num_iters, num_mpi_procs, atoi(argv[5]));
     }
   } else {
     fprintf(stderr, "Unknown search strategy: %s\n", search_type.c_str());
@@ -68,5 +70,3 @@ int main(int argc, char* argv[]) {
   delete strategy;
   return 0;
 }
-
-

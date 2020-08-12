@@ -11,31 +11,31 @@
 #ifndef RUN_CREST_CONCOLIC_SEARCH_H__
 #define RUN_CREST_CONCOLIC_SEARCH_H__
 
-#include <map>
-#include <vector>
+#include <time.h>
 #include <ext/hash_map>
 #include <ext/hash_set>
-#include <time.h>
+#include <map>
+#include <vector>
 
 /*
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/un.h>
 */
 
 #include "base/basic_types.h"
 #include "base/symbolic_execution.h"
 
-using std::map;
-using std::vector;
 using __gnu_cxx::hash_map;
 using __gnu_cxx::hash_set;
+using std::map;
+using std::vector;
 
 namespace crest {
 
 class Search {
  public:
-  Search(const string& program, int max_iterations);
+  Search(const string& program, int max_iterations, int num_mpi_procs);
   virtual ~Search();
 
   virtual void Run() = 0;
@@ -60,25 +60,21 @@ class Search {
 
   typedef vector<branch_id_t>::const_iterator BranchIt;
 
-  bool SolveAtBranch(const SymbolicExecution& ex,
-		     size_t branch_idx,
-		     vector<value_t>* input);
+  bool SolveAtBranch(const SymbolicExecution& ex, size_t branch_idx, vector<value_t>* input);
 
-  bool CheckPrediction(const SymbolicExecution& old_ex,
-		       const SymbolicExecution& new_ex,
-		       size_t branch_idx);
+  bool CheckPrediction(const SymbolicExecution& old_ex, const SymbolicExecution& new_ex, size_t branch_idx);
 
   void RunProgram(const vector<value_t>& inputs, SymbolicExecution* ex);
   bool UpdateCoverage(const SymbolicExecution& ex);
-  bool UpdateCoverage(const SymbolicExecution& ex,
-		      set<branch_id_t>* new_branches);
+  bool UpdateCoverage(const SymbolicExecution& ex, set<branch_id_t>* new_branches);
 
-  void RandomInput(const map<var_t,type_t>& vars, vector<value_t>* input);
+  void RandomInput(const map<var_t, type_t>& vars, vector<value_t>* input);
 
  private:
   const string program_;
-  const int max_iters_; 
+  const int max_iters_;
   int num_iters_;
+  int num_mpi_procs_;
 
   /*
   struct sockaddr_un sock_;
@@ -90,12 +86,9 @@ class Search {
   void LaunchProgram(const vector<value_t>& inputs);
 };
 
-
 class BoundedDepthFirstSearch : public Search {
  public:
-  explicit BoundedDepthFirstSearch(const string& program,
-				   int max_iterations,
-				   int max_depth);
+  explicit BoundedDepthFirstSearch(const string& program, int max_iterations, int num_mpi_procs, int max_depth);
   virtual ~BoundedDepthFirstSearch();
 
   virtual void Run();
@@ -106,12 +99,11 @@ class BoundedDepthFirstSearch : public Search {
   void DFS(size_t pos, int depth, SymbolicExecution& prev_ex);
 };
 
-
 /*
 class OldDepthFirstSearch : public Search {
  public:
   explicit OldDepthFirstSearch(const string& program,
-			       int max_iterations);
+                   int max_iterations);
   virtual ~OldDepthFirstSearch();
 
   virtual void Run();
@@ -124,19 +116,18 @@ class OldDepthFirstSearch : public Search {
 
 class RandomInputSearch : public Search {
  public:
-  RandomInputSearch(const string& program, int max_iterations);
+  RandomInputSearch(const string& program, int max_iterations, int num_mpi_procs);
   virtual ~RandomInputSearch();
 
   virtual void Run();
-  
+
  private:
   SymbolicExecution ex_;
 };
 
-
 class RandomSearch : public Search {
  public:
-  RandomSearch(const string& program, int max_iterations);
+  RandomSearch(const string& program, int max_iterations, int num_mpi_procs);
   virtual ~RandomSearch();
 
   virtual void Run();
@@ -144,16 +135,14 @@ class RandomSearch : public Search {
  private:
   SymbolicExecution ex_;
 
-  void SolveUncoveredBranches(size_t i, int depth,
-                              const SymbolicExecution& prev_ex);
+  void SolveUncoveredBranches(size_t i, int depth, const SymbolicExecution& prev_ex);
 
   bool SolveRandomBranch(vector<value_t>* next_input, size_t* idx);
 };
 
-
 class UniformRandomSearch : public Search {
  public:
-  UniformRandomSearch(const string& program, int max_iterations, size_t max_depth);
+  UniformRandomSearch(const string& program, int max_iterations, int num_mpi_procs, size_t max_depth);
   virtual ~UniformRandomSearch();
 
   virtual void Run();
@@ -167,13 +156,12 @@ class UniformRandomSearch : public Search {
   void DoUniformRandomPath();
 };
 
-
 // Search looks like:
 //  (1) Do random inputs for some amount of time.
 //  (2) Do a local search repeatedly in some area, then continue the random search.
 class HybridSearch : public Search {
  public:
-  HybridSearch(const string& program, int max_iterations, int step_size);
+  HybridSearch(const string& program, int max_iterations, int num_mpi_procs, int step_size);
   virtual ~HybridSearch();
 
   virtual void Run();
@@ -184,7 +172,6 @@ class HybridSearch : public Search {
 
   int step_size_;
 };
-
 
 /*
 class LeastRunSearch : public Search {
@@ -201,10 +188,9 @@ class LeastRunSearch : public Search {
 };
 */
 
-
 class CfgBaselineSearch : public Search {
  public:
-  CfgBaselineSearch(const string& program, int max_iterations);
+  CfgBaselineSearch(const string& program, int num_mpi_procs, int max_iterations);
   virtual ~CfgBaselineSearch();
 
   virtual void Run();
@@ -215,10 +201,9 @@ class CfgBaselineSearch : public Search {
   bool DoSearch(int depth, int iters, int pos, const SymbolicExecution& prev_ex);
 };
 
-
 class CfgHeuristicSearch : public Search {
  public:
-  CfgHeuristicSearch(const string& program, int max_iterations);
+  CfgHeuristicSearch(const string& program, int max_iterations, int num_mpi_procs);
   virtual ~CfgHeuristicSearch();
 
   virtual void Run();
@@ -263,22 +248,15 @@ class CfgHeuristicSearch : public Search {
   bool DoBoundedBFS(int i, int depth, const SymbolicExecution& prev_ex);
   void SkipUntilReturn(const vector<branch_id_t> path, size_t* pos);
 
-  bool FindAlongCfg(size_t i, unsigned int dist,
-		    const SymbolicExecution& ex,
-		    const set<branch_id_t>& bs);
+  bool FindAlongCfg(size_t i, unsigned int dist, const SymbolicExecution& ex, const set<branch_id_t>& bs);
 
-  bool SolveAlongCfg(size_t i, unsigned int max_dist,
-		     const SymbolicExecution& prev_ex);
+  bool SolveAlongCfg(size_t i, unsigned int max_dist, const SymbolicExecution& prev_ex);
 
-  void CollectNextBranches(const vector<branch_id_t>& path,
-			   size_t* pos, vector<size_t>* idxs);
+  void CollectNextBranches(const vector<branch_id_t>& path, size_t* pos, vector<size_t>* idxs);
 
-  size_t MinCflDistance(size_t i,
-			const SymbolicExecution& ex,
-			const set<branch_id_t>& bs);
+  size_t MinCflDistance(size_t i, const SymbolicExecution& ex, const set<branch_id_t>& bs);
 };
 
 }  // namespace crest
 
 #endif  // RUN_CREST_CONCOLIC_SEARCH_H__
-
