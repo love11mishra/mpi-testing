@@ -1,6 +1,12 @@
 #!/bin/bash
 
 
+usage="USAGE: ./mpicrest <targetname> <crest_iter> <num_mpi_procs> <crest_stratergy>"
+
+if [ $# -ne 5 ]; then
+    echo ${usage}
+    exit 0
+fi
 
 CREST_DIR=../crest
 CILLY=${CREST_DIR}/cil/bin/cilly
@@ -17,6 +23,7 @@ ${CILLY} $1 -c --save-temps --doCrestInstrument \
 mpicc -c ${TARGET}.cil.c -o ${TARGET}.cil.o
 mpic++ -L${CREST_DIR}/lib/ ${TARGET}.cil.o -lcrest -lstdc++ -o ${TARGET}
 
-echo "mpirun -n $2 ./${TARGET}"
-mpirun -n $2 ./${TARGET}
+# echo "mpirun -n $2 ./${TARGET}"
+# mpirun -n $2 ./${TARGET}
 
+${CREST_DIR}/bin/run_crest ./${TARGET} $2 $3 $4
