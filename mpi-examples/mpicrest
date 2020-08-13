@@ -3,7 +3,7 @@
 
 usage="USAGE: ./mpicrest <targetname> <crest_iter> <num_mpi_procs> <crest_stratergy>"
 
-if [ $# -ne 5 ]; then
+if [ $# -ne 4 ]; then
     echo ${usage}
     exit 0
 fi
