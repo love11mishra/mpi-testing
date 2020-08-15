@@ -195,7 +195,7 @@ void Search::LaunchProgram(const vector<value_t>& inputs) {
 
   char command[512] = {0};
   sprintf(command, "mpirun -n %d %s", num_mpi_procs_, program_.c_str());
-  system(program_.c_str());
+  system(command);
 }
 
 void Search::RunProgram(const vector<value_t>& inputs, SymbolicExecution* ex) {
