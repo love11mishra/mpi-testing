@@ -357,7 +357,7 @@ bool Search::CheckPrediction(const SymbolicExecution& old_ex, const SymbolicExec
 
 BoundedDepthFirstSearch::BoundedDepthFirstSearch(const string& program, int max_iterations, int num_mpi_procs,
                                                  int max_depth)
-    : Search(program, num_mpi_procs, max_iterations), max_depth_(max_depth) {}
+    : Search(program, max_iterations, num_mpi_procs), max_depth_(max_depth) {}
 
 BoundedDepthFirstSearch::~BoundedDepthFirstSearch() {}
 
